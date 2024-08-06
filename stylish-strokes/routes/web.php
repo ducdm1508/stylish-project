@@ -1,27 +1,27 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\VisitorCountController;
 use App\Http\Controllers\ToolControllers;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\StylesController;
 use App\Http\Controllers\LearningController;
 use App\Http\Controllers\GalleryController;
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-Route::prefix('admin')->group(function () {
+
+Route::get('/login', function() {
+    return view('login'); 
+});
+
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
+
+Route::middleware('auth:sanctum','admin')->prefix('admin')->group(function () {
+
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+
     Route::get('/visit', [VisitorCountController::class, 'getVisitors']);
     Route::post('/record-visit', [VisitorCountController::class, 'recordVisitor']);
     Route::get('/tool', [ToolControllers::class, 'tool']);
@@ -44,3 +44,10 @@ Route::prefix('admin')->group(function () {
     Route::put('/gallery/{id}', [GalleryController::class, 'update']);
     Route::delete('/gallery/{id}', [GalleryController::class, 'delete']);
 });
+Route::get('/styles', [StylesController::class, 'getList']);
+Route::get('/tool', [ToolControllers::class, 'tool']);
+Route::get('/learning', [LearningController::class, 'getResourse']);
+Route::get('/gallery', [GalleryController::class, 'getGallery']);
+Route::post('/feedback', [FeedbackController::class, 'insert']);
+Route::get('/visit', [VisitorCountController::class, 'getVisitors']);
+Route::post('/record-visit', [VisitorCountController::class, 'recordVisitor']);
